@@ -1,35 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-func printSlice[T comparable, V string](items []T, name V) {
-	for _, item := range items {
-		fmt.Println(item, name)
-	}
+func task(id int, w *sync.WaitGroup) {
+	defer w.Done()
+	fmt.Println("doing task", id)
 }
 
-// func printStringSlice(items []string) {
-// 	for _, item := range items {
-// 		fmt.Println(item)
-// 	}
-// }
-
-//
-// LIFO
-// type stack[T any] struct {
-// 	elements []T
-// }
-
 func main() {
-	// myStack := stack[string]{
-	// 	elements: []string{"golang"},
-	// }
+	var wg sync.WaitGroup
 
-	// fmt.Println(myStack)
+	for i := 0; i <= 10; i++ {
+		wg.Add(1)
+		go task(i, &wg)
+	}
 
-	// nums := []int{1, 2, 3}
-	// names := []string{"golang", "typescript"}
-	vals := []bool{true, false, true}
-	// printStringSlice(names)
-	printSlice(vals, "john")
+	wg.Wait()
 }
